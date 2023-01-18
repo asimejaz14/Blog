@@ -3,11 +3,13 @@ from uuid import UUID
 from fastapi import FastAPI
 from pydantic import BaseModel
 
+from blog import models as BlogModels
+# from user import models as UserModels
 from database import engine, Base, SessionLocal
 
+BlogModels.Base.metadata.create_all(bind=engine)
+# UserModels.Base.metadata.create_all(bind=engine)
 app = FastAPI()
-
-Base.metadata.create_all(bind=engine)
 
 
 def get_db():
