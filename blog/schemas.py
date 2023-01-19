@@ -1,3 +1,5 @@
+from uuid import uuid4, UUID
+
 from pydantic import BaseModel
 from datetime import datetime
 
