@@ -14,7 +14,6 @@ class Blog(Base):
     description = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-    random = Column(String, nullable=True)
 
     def __str__(self):
         return self.title
