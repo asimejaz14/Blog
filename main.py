@@ -1,3 +1,4 @@
+from typing import List
 from uuid import UUID
 
 from fastapi import FastAPI, Depends, status, HTTPException
@@ -6,7 +7,7 @@ from sqlalchemy.orm import Session
 
 import blog.schemas
 from blog import models as BlogModels
-from blog.schemas import BlogSchema, BlogResponseSchema
+from blog.schemas import BlogSchema, BlogResponseSchema, AllBlogResponseSchema
 # from user import models as UserModels
 from database import engine, Base, SessionLocal
 
@@ -23,7 +24,7 @@ def get_db():
         db.close()
 
 
-@app.post("/blog", status_code=status.HTTP_201_CREATED)
+@app.post("/blog", status_code=status.HTTP_201_CREATED, response_model=BlogResponseSchema)
 async def create_blog(request: BlogSchema, db: Session = Depends(get_db)):
     blog = BlogModels.Blog(title=request.title, description=request.description)
     db.add(blog)
@@ -32,7 +33,7 @@ async def create_blog(request: BlogSchema, db: Session = Depends(get_db)):
     return blog
 
 
-@app.get("/blog", status_code=status.HTTP_200_OK)
+@app.get("/blog", status_code=status.HTTP_200_OK, response_model=List[AllBlogResponseSchema], response_model_exclude_none=True)
 async def get_all_blogs(db: Session = Depends(get_db)):
     blogs = db.query(BlogModels.Blog).all()
     if not blogs:
