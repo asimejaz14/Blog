@@ -41,7 +41,7 @@ async def get_all_blogs(db: Session = Depends(get_db)):
     return blogs
 
 
-@app.get("/blog/{id}", status_code=status.HTTP_200_OK)
+@app.get("/blog/{id}", status_code=status.HTTP_200_OK, response_model=AllBlogResponseSchema, response_model_exclude_none=True)
 async def get_blog_by_id(id, db: Session = Depends(get_db)):
     blog = db.query(BlogModels.Blog).filter(BlogModels.Blog.id == id).first()
     if not blog:
@@ -67,4 +67,4 @@ async def delete_blog_by_id(id, db: Session = Depends(get_db)):
     blog_.delete()
     db.commit()
 
-    return "ok"
+    return
