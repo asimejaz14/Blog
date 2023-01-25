@@ -14,10 +14,19 @@ class UserIn(BaseModel):
 
 class UserOut(BaseModel):
     first_name: str
+    last_name: str
+    email: EmailStr
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        orm_model = True
+
+class UserInDb(BaseModel):
+    first_name: str
     last_name: str | None = None
     email: EmailStr
-    created_at: datetime | None = None
-    updated_at: datetime | None = None
+    hashed_password: str
 
     class Config:
         orm_model = True

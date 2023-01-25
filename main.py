@@ -1,21 +1,21 @@
 from typing import List
-from uuid import UUID
 
 from fastapi import FastAPI, Depends, status, HTTPException
-from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-import blog.schemas
 from blog import models as BlogModels
 from user import models as UserModels
 from blog.schemas import BlogSchema, BlogResponseSchema, AllBlogResponseSchema
+from user.hashing import Hash
 
-# from user import models as UserModels
-from database import engine, Base, SessionLocal
+from database import engine, SessionLocal
+from user.schemas import UserIn
 
 BlogModels.Base.metadata.create_all(bind=engine)
 UserModels.Base.metadata.create_all(bind=engine)
 app = FastAPI()
+
+hasher = Hash()
 
 
 def get_db():
@@ -86,3 +86,14 @@ async def delete_blog_by_id(id, db: Session = Depends(get_db)):
     db.commit()
 
     return
+
+
+@app.post("/signup", status_code=status.HTTP_201_CREATED)
+async def signup(user: UserIn, db: Session = Depends(get_db)):
+
+    user = UserModels.User(**user.dict(), hashed_password=hasher.get_hash_password(user.password))
+
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return user
