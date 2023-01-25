@@ -1,5 +1,3 @@
-from uuid import uuid4, UUID
-
 from pydantic import BaseModel
 from datetime import datetime
 
@@ -10,10 +8,7 @@ class BlogSchema(BaseModel):
 
     class Config:
         schema_extra = {
-            "example": {
-                "title": "Blog Title 1",
-                "description": "Blog description here"
-            }
+            "example": {"title": "Blog Title 1", "description": "Blog description here"}
         }
 
 
@@ -23,10 +18,7 @@ class BlogResponseSchema(BaseModel):
 
     class Config:
         schema_extra = {
-            "example": {
-                "title": "Blog Title 1",
-                "description": "Blog description here"
-            }
+            "example": {"title": "Blog Title 1", "description": "Blog description here"}
         }
         orm_mode = True
 
@@ -41,7 +33,7 @@ class AllBlogResponseSchema(BlogResponseSchema):
                 "title": "Blog Title 1",
                 "description": "Blog description here",
                 "created_at": "2023-01-20 10:03:58.153382+00",
-                "updated_at": "2023-01-20 10:03:58.153382+00"
+                "updated_at": "2023-01-20 10:03:58.153382+00",
             }
         }
         orm_mode = True

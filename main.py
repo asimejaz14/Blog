@@ -9,6 +9,7 @@ import blog.schemas
 from blog import models as BlogModels
 from user import models as UserModels
 from blog.schemas import BlogSchema, BlogResponseSchema, AllBlogResponseSchema
+
 # from user import models as UserModels
 from database import engine, Base, SessionLocal
 
@@ -25,7 +26,9 @@ def get_db():
         db.close()
 
 
-@app.post("/blog", status_code=status.HTTP_201_CREATED, response_model=BlogResponseSchema)
+@app.post(
+    "/blog", status_code=status.HTTP_201_CREATED, response_model=BlogResponseSchema
+)
 async def create_blog(request: BlogSchema, db: Session = Depends(get_db)):
     blog = BlogModels.Blog(title=request.title, description=request.description)
     db.add(blog)
@@ -34,7 +37,12 @@ async def create_blog(request: BlogSchema, db: Session = Depends(get_db)):
     return blog
 
 
-@app.get("/blog", status_code=status.HTTP_200_OK, response_model=List[AllBlogResponseSchema], response_model_exclude_none=True)
+@app.get(
+    "/blog",
+    status_code=status.HTTP_200_OK,
+    response_model=List[AllBlogResponseSchema],
+    response_model_exclude_none=True,
+)
 async def get_all_blogs(db: Session = Depends(get_db)):
     blogs = db.query(BlogModels.Blog).all()
     if not blogs:
@@ -42,7 +50,12 @@ async def get_all_blogs(db: Session = Depends(get_db)):
     return blogs
 
 
-@app.get("/blog/{id}", status_code=status.HTTP_200_OK, response_model=AllBlogResponseSchema, response_model_exclude_none=True)
+@app.get(
+    "/blog/{id}",
+    status_code=status.HTTP_200_OK,
+    response_model=AllBlogResponseSchema,
+    response_model_exclude_none=True,
+)
 async def get_blog_by_id(id, db: Session = Depends(get_db)):
     blog = db.query(BlogModels.Blog).filter(BlogModels.Blog.id == id).first()
     if not blog:
@@ -54,7 +67,9 @@ async def get_blog_by_id(id, db: Session = Depends(get_db)):
 async def updated_blog(id, request: BlogSchema, db: Session = Depends(get_db)):
     blog_ = db.query(BlogModels.Blog).filter(BlogModels.Blog.id == id)
     if not blog_.first():
-        raise HTTPException(status_code=404, detail=f"Blog with id: {id} does not exist")
+        raise HTTPException(
+            status_code=404, detail=f"Blog with id: {id} does not exist"
+        )
     blog_.update(request.dict())
     db.commit()
     return blog_.first()
@@ -64,7 +79,9 @@ async def updated_blog(id, request: BlogSchema, db: Session = Depends(get_db)):
 async def delete_blog_by_id(id, db: Session = Depends(get_db)):
     blog_ = db.query(BlogModels.Blog).filter(BlogModels.Blog.id == id)
     if not blog_.first():
-        raise HTTPException(status_code=404, detail=f"Blog with id: {id} does not exist")
+        raise HTTPException(
+            status_code=404, detail=f"Blog with id: {id} does not exist"
+        )
     blog_.delete()
     db.commit()
 

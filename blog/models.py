@@ -16,5 +16,3 @@ class Blog(Base):
 
     def __str__(self):
         return self.title
-
-

@@ -14,17 +14,23 @@ from sqlalchemy.dialects.postgresql import UUID
 
 
 # revision identifiers, used by Alembic.
-revision = '201bf3356f9b'
-down_revision = 'aee1b3cda935'
+revision = "201bf3356f9b"
+down_revision = "aee1b3cda935"
 branch_labels = None
 depends_on = None
 
 
 def upgrade() -> None:
-    op.add_column('blogs', sa.Column("created_at", sa.DateTime(timezone=True), server_default=func.now()))
-    op.add_column('blogs', sa.Column("updated_at", sa.DateTime(timezone=True), onupdate=func.now()))
+    op.add_column(
+        "blogs",
+        sa.Column("created_at", sa.DateTime(timezone=True), server_default=func.now()),
+    )
+    op.add_column(
+        "blogs",
+        sa.Column("updated_at", sa.DateTime(timezone=True), onupdate=func.now()),
+    )
 
 
 def downgrade() -> None:
-    op.drop_column('blogs', 'created_at')
-    op.drop_column('blogs', 'updated_at')
+    op.drop_column("blogs", "created_at")
+    op.drop_column("blogs", "updated_at")

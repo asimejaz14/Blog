@@ -14,17 +14,17 @@ from sqlalchemy.dialects.postgresql import UUID
 
 
 # revision identifiers, used by Alembic.
-revision = 'aee1b3cda935'
+revision = "aee1b3cda935"
 down_revision = None
 branch_labels = None
 depends_on = None
 
 
 def upgrade() -> None:
-    op.create_table(
-        'blogs'
+    op.create_table("blogs")
+    sa.Column(
+        "id", UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4
     )
-    sa.Column("id", UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4)
     sa.Column("title", sa.String(), nullable=True)
     sa.Column("description", sa.Text, nullable=True)
     # created_at = sa.Column(sa.DateTime(timezone=True), server_default=func.now())
