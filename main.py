@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import FastAPI, Depends, status, HTTPException
+from fastapi import FastAPI, Depends, status, HTTPException, Request
 from sqlalchemy.orm import Session
 
 from blog import models as BlogModels
@@ -13,7 +13,8 @@ from user.schemas import UserIn
 
 BlogModels.Base.metadata.create_all(bind=engine)
 UserModels.Base.metadata.create_all(bind=engine)
-app = FastAPI()
+app = FastAPI(title="Blog APIs")
+
 
 hasher = Hash()
 
@@ -90,10 +91,14 @@ async def delete_blog_by_id(id, db: Session = Depends(get_db)):
 
 @app.post("/signup", status_code=status.HTTP_201_CREATED)
 async def signup(user: UserIn, db: Session = Depends(get_db)):
-
     user = UserModels.User(**user.dict(), hashed_password=hasher.get_hash_password(user.password))
 
     db.add(user)
     db.commit()
     db.refresh(user)
     return user
+
+
+@app.post("/check")
+async def check_data(user: UserIn, request: Request):
+    print(request)
